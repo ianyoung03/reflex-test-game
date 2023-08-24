@@ -8,7 +8,7 @@ class Circle:
     def __init__(self, index, lifetime):
         self.index = index
         self.caught = False
-        self.lifetime = 180
+        self.lifetime = lifetime
         self.x = random.randrange(0, 500)
         self.y = random.randrange(0,500)
     

@@ -7,11 +7,15 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
+# just preset values for now
 radius = 20
 colour = (255, 0, 0)
 thickness = 2
 
-c1 = circle.Circle(0, 60)
+# Code for generating and removing circles
+generatedCircles = [circle.Circle(0, 1)]
+counter = 0
+
 cap = cv2.VideoCapture(0)
 with mp_hands.Hands(
     model_complexity=0,
@@ -37,9 +41,21 @@ with mp_hands.Hands(
         image_height, image_width, _ = image.shape
         
         # Now displaying a circle randomly in a certain location that will then disappear
-        if results.multi_hand_landmarks != None and c1.lifetime > 0:
-            image = cv2.circle(image, (c1.x, c1.y), radius, colour, thickness)
-        c1.decrement_lifetime()
+        for circ in generatedCircles:
+            if results.multi_hand_landmarks != None and circ.lifetime > 0:
+                image = cv2.circle(image, (circ.x, circ.y), radius, colour, thickness)
+        
+        # Decrement lifetime of all "alive" circles
+        for circ in generatedCircles:
+            circ.decrement_lifetime()
+        
+        # Counter manipulation to add a circle every 60 frames
+        if counter == 60:
+                generatedCircles.append(circle.Circle(0,60))
+                counter = 0
+        else:
+            counter += 1
+
             
 
         # "Drawing" the detection of the hand on the hand
