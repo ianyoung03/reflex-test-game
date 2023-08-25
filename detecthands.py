@@ -2,6 +2,7 @@ import keypresses
 import cv2
 import mediapipe as mp
 import circle
+import gamestage
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -12,10 +13,13 @@ radius = 20
 colour = (255, 0, 0)
 thickness = 2
 
-# Code for generating and removing circles
-generatedCircles = [circle.Circle(0, 1)]
-counter = 0
+game = gamestage.GameStage(1, 1000, 1000)
 
+# Code for generating and removing circles
+#generatedCircles = [circle.Circle(0, 1)]
+#counter = 0
+
+counter = 0
 cap = cv2.VideoCapture(0)
 with mp_hands.Hands(
     model_complexity=0,
@@ -40,7 +44,18 @@ with mp_hands.Hands(
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
         image_height, image_width, _ = image.shape
         
+        # make creating new circles a gamestage method!
+        if counter == 0:
+            game.active_circles.append(circle.Circle(0, 1))
         # Now displaying a circle randomly in a certain location that will then disappear
+        for circ in game.active_circles:
+            if circ.lifetime > 0:
+                image = cv2.circle(image, (circ.x, circ.y), radius, colour, thickness)
+            if results.multi_hand_landmarks != None: 
+                x = results.multi_hand_landmarks[0].landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].x
+                y = results.multi_hand_landmarks[0].landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].y
+                game.check_circles(x*image_width, y*image_height)
+        """
         for circ in generatedCircles:
             if results.multi_hand_landmarks != None and circ.lifetime > 0:
                 image = cv2.circle(image, (circ.x, circ.y), radius, colour, thickness)
@@ -48,11 +63,10 @@ with mp_hands.Hands(
         # Decrement lifetime of all "alive" circles
         for circ in generatedCircles:
             circ.decrement_lifetime()
-        
+        """
         # Counter manipulation to add a circle every 60 frames
         if counter == 60:
-                generatedCircles.append(circle.Circle(0,60))
-                counter = 0
+            counter = 0
         else:
             counter += 1
 
@@ -69,7 +83,7 @@ with mp_hands.Hands(
                 mp_drawing_styles.get_default_hand_connections_style())
 
         # Displaying the annotation visual of the hands
-        cv2.imshow('View', image)
+        cv2.imshow('View', cv2.flip(image, 1))
         if cv2.waitKey(1) & 0xFF == ord('q'):
             cv2.destroyAllWindows()
             break
