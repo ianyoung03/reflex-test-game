@@ -61,4 +61,8 @@ def redraw_circles(image, game):
         if circ.lifetime > 0:
             image = cv2.circle(image, (circ.x, circ.y), radius, colour, thickness)    
         
-    cv2.imshow('View', cv2.flip(image, 1))
+    #cv2.imshow('View', cv2.flip(image, 1))
+
+    image = cv2.flip(image,1)
+    cv2.putText(image, str(game.score), (400,400), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 2)
+    cv2.imshow('View', image)

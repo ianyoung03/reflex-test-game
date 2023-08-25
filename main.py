@@ -27,19 +27,29 @@ while True:
     #print(image_height)
     
     # essentially updating the game with all the new circles here
-    game.check_circles(results, image_width, image_height)
-    
-    # "updating" the view ie drawing the still existing circles and updating viewfinder
-    dh2.redraw_circles(image, game)
-    
-    if game.check_game_over():
-        break
-    
     if counter == 0:
         game.add_circle()
     elif counter == 60:
          counter = -1
     counter += 1
+    #cv2.flip(image, 1)
+    
+    #cv2.flip(image,1)
+    game.check_circles(results, image_width, image_height)
+    
+    # "updating" the view ie drawing the still existing circles and updating viewfinder
+    
+    #cv2.putText(image, str(game.score), (400,400), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 2)
+
+    dh2.redraw_circles(image, game)
+    
+    
+    
+    if game.check_game_over():
+        break
+    
+    
+    
     
     if cv2.waitKey(1) & 0xFF == ord('q'):
         cv2.destroyAllWindows()
