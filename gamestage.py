@@ -20,13 +20,29 @@ class GameStage:
     def check_circles(self, results, image_width , image_height):
         if results.multi_hand_landmarks != None:
             #getting pos of hand in x and y coords
-            x = results.multi_hand_landmarks[0].landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].x
-            y = results.multi_hand_landmarks[0].landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].y
-            x_scaled = x*image_width
-            y_scaled = y*image_height
+            
+            x1 = results.multi_hand_landmarks[0].landmark[mp_hands.HandLandmark.MIDDLE_FINGER_MCP].x
+            y1 = results.multi_hand_landmarks[0].landmark[mp_hands.HandLandmark.MIDDLE_FINGER_MCP].y
+            x1_scaled = x1*image_width
+            y1_scaled = y1*image_height
+            
+            if (len(results.multi_hand_landmarks) >= 2):
+                x2 = results.multi_hand_landmarks[1].landmark[mp_hands.HandLandmark.MIDDLE_FINGER_MCP].x
+                y2 = results.multi_hand_landmarks[1].landmark[mp_hands.HandLandmark.MIDDLE_FINGER_MCP].y
+                x2_scaled = x2*image_width
+                y2_scaled = y2*image_height
+            else:
+                x1_scaled = OB
+                y1_scaled = OB
+                x2_scaled = OB
+                y2_scaled = OB
+            
+            
         else: 
-            x_scaled = OB
-            y_scaled = OB
+            x1_scaled = OB
+            y1_scaled = OB
+            x2_scaled = OB
+            y2_scaled = OB
 
         for circ in self.active_circles:
             #decrease lifetime of each circle by 1
@@ -39,7 +55,10 @@ class GameStage:
                 self.active_circles.remove(circ)
 
             # condition: if coordinates of hand are within a certain bound of the coordinates of the circle, remove circle
-            if circ.x >= x_scaled - BUFFER and circ.x <= x_scaled + BUFFER and circ.y >= y_scaled - BUFFER and circ.y <= y_scaled + BUFFER:
+            if circ.x >= x1_scaled - BUFFER and circ.x <= x1_scaled + BUFFER and circ.y >= y1_scaled - BUFFER and circ.y <= y1_scaled + BUFFER:
+                self.active_circles.remove(circ)
+                self.score += 1
+            elif circ.x >= x2_scaled - BUFFER and circ.x <= x2_scaled + BUFFER and circ.y >= y2_scaled - BUFFER and circ.y <= y2_scaled + BUFFER:
                 self.active_circles.remove(circ)
                 self.score += 1
 

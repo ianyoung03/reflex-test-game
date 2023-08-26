@@ -9,9 +9,10 @@ app = Flask(__name__)
 def play():
         return render_template('play.html')
 
+# Video streaming route. Put this in the src attribute of an img tag
 @app.route('/go')
 def go():
-    #Video streaming route. Put this in the src attribute of an img tag
+    
     return Response(main(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
