@@ -65,4 +65,5 @@ def redraw_circles(image, game):
 
     image = cv2.flip(image,1)
     cv2.putText(image, str(game.score), (400,400), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 2)
-    cv2.imshow('View', image)
+    #cv2.imshow('View', image)
+    return image

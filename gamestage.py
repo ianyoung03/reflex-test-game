@@ -1,7 +1,8 @@
 import circle
 import mediapipe as mp
 mp_hands = mp.solutions.hands
-BUFFER = 20
+BUFFER = 40
+OB = -5
 class GameStage:
     score = 0 # num of "grabbed" circles
     missed_circles = 0 # how many missed circles there are 
@@ -23,21 +24,24 @@ class GameStage:
             y = results.multi_hand_landmarks[0].landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].y
             x_scaled = x*image_width
             y_scaled = y*image_height
+        else: 
+            x_scaled = OB
+            y_scaled = OB
 
-            for circ in self.active_circles:
-                #decrease lifetime of each circle by 1
-                #circ.decrement_lifetime()
-                circ.lifetime = circ.lifetime - 1
-                #lifetime condition (if circle isn't caught do stuff)
-                if circ.lifetime == 0:
-                    #print("got to here")
-                    self.increase_missed_circ()
-                    self.active_circles.remove(circ)
+        for circ in self.active_circles:
+            #decrease lifetime of each circle by 1
+            #circ.decrement_lifetime()
+            circ.lifetime = circ.lifetime - 1
+            #lifetime condition (if circle isn't caught do stuff)
+            if circ.lifetime == 0:
+                #print("got to here")
+                self.increase_missed_circ()
+                self.active_circles.remove(circ)
 
-                # condition: if coordinates of hand are within a certain bound of the coordinates of the circle, remove circle
-                if circ.x >= x_scaled - BUFFER and circ.x <= x_scaled + BUFFER and circ.y >= y_scaled - BUFFER and circ.y <= y_scaled + BUFFER:
-                    self.active_circles.remove(circ)
-                    self.score += 1
+            # condition: if coordinates of hand are within a certain bound of the coordinates of the circle, remove circle
+            if circ.x >= x_scaled - BUFFER and circ.x <= x_scaled + BUFFER and circ.y >= y_scaled - BUFFER and circ.y <= y_scaled + BUFFER:
+                self.active_circles.remove(circ)
+                self.score += 1
 
     def increase_missed_circ(self):
         self.missed_circles += 1
