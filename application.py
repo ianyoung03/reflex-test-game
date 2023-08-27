@@ -5,20 +5,20 @@ import gamestage
 import mediapipe as mp
 import time
 application = Flask(__name__)
+app = application
 
-@application.route('/play')
+@app.route('/play')
 def play():
-        return render_template('play.html')
+    return render_template('play.html')
 
 # Video streaming route. Put this in the src attribute of an img tag
-@application.route('/go')
+@app.route('/go')
 def go():
-    
     return Response(main(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 
-@application.route('/')
+@app.route('/')
 def home():
     return render_template('home.html')
 #@app.route('/')
@@ -35,7 +35,7 @@ def main():
     thickness = 2
 
     game = gamestage.GameStage(1, 1920, 1080)
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
     counter = 0
     
     while True:
@@ -103,5 +103,5 @@ def main():
 
 
 
-#if __name__ == '__main__':
-#    application.run(debug=False)
+if __name__ == '__main__':
+    app.run(debug=False)
