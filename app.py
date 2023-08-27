@@ -3,6 +3,7 @@ import cv2
 import detecthands as dh2
 import gamestage
 import mediapipe as mp
+import time
 app = Flask(__name__)
 
 @app.route('/play')
@@ -36,7 +37,9 @@ def main():
     game = gamestage.GameStage(1, 1920, 1080)
     cap = cv2.VideoCapture(0)
     counter = 0
+    
     while True:
+        
         # this is the controller component of MVC. We run the model on a given frame, and get back results data, as well as the image of it
         model_results = dh2.run_model(cap)
         image = model_results[0]
@@ -63,20 +66,37 @@ def main():
 
         image = dh2.redraw_circles(image, game)
         
+        #if game.check_game_over():
+            #print("got to here")
+         #   image = dh2.write_game_over(image, game)
+        
+        #if game.check_game_over():
+            #cv2.destroyAllWindows()
+        #    break
         # translating each frame to jpg for network transmission
-        ret, buffer = cv2.imencode('.jpg', image)
-        image = buffer.tobytes()
-        yield(b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + image + b'\r\n')
-        
         if game.check_game_over():
-            break
-        
-        
-        
-        
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+            #print("in")
+            image = dh2.write_game_over(image, game)
+            ret, buffer = cv2.imencode('.jpg', image)
+            image = buffer.tobytes()
+            yield(b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + image + b'\r\n')
+            #over = True
             cv2.destroyAllWindows()
             break
+        else:
+            ret, buffer = cv2.imencode('.jpg', image)
+            image = buffer.tobytes()
+            yield(b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + image + b'\r\n')
+        
+        
+        
+        
+        
+        
+        
+        #if cv2.waitKey(1) & 0xFF == ord('q'):
+        #    cv2.destroyAllWindows()
+        #    break
 
             
     cap.release()
@@ -84,4 +104,4 @@ def main():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=False)

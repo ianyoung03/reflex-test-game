@@ -11,8 +11,8 @@ mp_hands = mp.solutions.hands
 
 # just preset values for now
 radius = 20
-colour = (255, 102, 0)
-thickness = 4
+colour = (21, 248, 249)
+thickness = -1
 
 
 
@@ -24,8 +24,8 @@ def run_model(cap):
         min_tracking_confidence=0.5) as hands:
         #while cap.isOpened():
             success, image = cap.read()
-            if not success:
-                print("Ignoring empty camera frame.")
+            #if not success:
+                #print("Ignoring empty camera frame.")
             # If loading a video, use 'break' instead of 'continue'.
                 #continue
 
@@ -64,6 +64,14 @@ def redraw_circles(image, game):
     #cv2.imshow('View', cv2.flip(image, 1))
 
     image = cv2.flip(image,1)
-    cv2.putText(image, str(game.score), (400,400), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 2)
-    #cv2.imshow('View', image)
+    cv2.putText(image, "Score: " + str(game.score), (5,40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 3)
+    cv2.putText(image, "Lives: " + str(game.lives - game.missed_circles), (5,80), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 3)
+
     return image
+
+def write_game_over(image, game):
+     #cv2.putText(image, "Score: " + str(game.score), (15,40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 3)
+     #image = cv2.flip(image,1)
+     #cv2.putText(image, "Lives: " + str(game.lives - game.missed_circles), (20,80), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 3)
+     cv2.putText(image, "GAME OVER",(40,640), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 8)
+     return image

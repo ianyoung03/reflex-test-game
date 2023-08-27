@@ -10,8 +10,8 @@ class Circle:
         self.index = index
         self.caught = False
         self.lifetime = lifetime
-        self.x = random.randrange(0, 1920)
-        self.y = random.randrange(0,1080)
+        self.x = random.randrange(int(0*0.85), int(1920*0.85))
+        self.y = random.randrange(int(0.85*0),int(1080*0.85))
     
     def decrement_lifetime(self):
         self.lifetime =- 1
