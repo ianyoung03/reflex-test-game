@@ -28,7 +28,7 @@ def run_model(cap):
                 #print("Ignoring empty camera frame.")
             # If loading a video, use 'break' instead of 'continue'.
                 #continue
-
+        #adding for testing new git name
         # To improve performance, optionally mark the image as not writeable to
         # pass by reference.
             image.flags.writeable = False
