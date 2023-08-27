@@ -7,6 +7,10 @@ import time
 application = Flask(__name__)
 app = application
 
+@app.route('/')
+def hello_world():
+    return "hello world"
+"""
 @app.route('/play')
 def play():
     return render_template('play.html')
@@ -100,7 +104,7 @@ def main():
 
             
     cap.release()
-
+"""
 
 
 if __name__ == '__main__':
