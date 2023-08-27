@@ -5,9 +5,9 @@ import gamestage
 import mediapipe as mp
 import time
 application = Flask(__name__)
-app = application
+#app = application
 
-@app.route('/')
+@application.route('/')
 def hello_world():
     return "hello world"
 """
@@ -108,4 +108,4 @@ def main():
 
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    application.run(debug=False)
