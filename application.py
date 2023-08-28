@@ -7,21 +7,23 @@ import time
 application = Flask(__name__)
 #app = application
 
+
+
 @application.route('/')
 def hello_world():
     return "hello world"
-"""
-@app.route('/play')
-def play():
-    return render_template('play.html')
+
+#@app.route('/play')
+#def play():
+#    return render_template('play.html')
 
 # Video streaming route. Put this in the src attribute of an img tag
-@app.route('/go')
-def go():
-    return Response(main(), mimetype='multipart/x-mixed-replace; boundary=frame')
+#@app.route('/go')
+#def go():
+#    return Response(main(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
-
+"""
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -39,7 +41,7 @@ def main():
     thickness = 2
 
     game = gamestage.GameStage(1, 1920, 1080)
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
     counter = 0
     
     while True:
@@ -104,8 +106,8 @@ def main():
 
             
     cap.release()
-"""
 
+"""
 
 if __name__ == '__main__':
     application.run(debug=False)
