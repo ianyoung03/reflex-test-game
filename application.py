@@ -29,7 +29,7 @@ def home():
 def main():
     #initialize the game instance
     game = gamestage.GameStage(1, 1920, 1080)
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
     counter = 0
     max = 60
     
