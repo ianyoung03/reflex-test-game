@@ -1,35 +1,27 @@
-
-# this class behaves as the controller and viewport in MVC. 
+# this file behaves as the controller and viewport in MVC, and runs the core hand detection model
 import cv2
 import mediapipe as mp
-import circle
-import gamestage
+
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
-# just preset values for now
+# for circle generation and display
 radius = 20
 colour = (21, 248, 249)
 thickness = -1
 
 
 
-#cap = cv2.VideoCapture(0)
+# this is where the hands are detected. This func's code primarily from Mediapipe docs https://mediapipe.readthedocs.io/en/latest/solutions/hands.html
 def run_model(cap):
     with mp_hands.Hands(
         model_complexity=0,
         min_detection_confidence=0.50,
         min_tracking_confidence=0.5) as hands:
-        #while cap.isOpened():
             success, image = cap.read()
-            #if not success:
-                #print("Ignoring empty camera frame.")
-            # If loading a video, use 'break' instead of 'continue'.
-                #continue
-        #adding for testing new git name
-        # To improve performance, optionally mark the image as not writeable to
+        # To improve performance, optionally marking the image as not writeable to
         # pass by reference.
             image.flags.writeable = False
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -54,14 +46,13 @@ def run_model(cap):
             #returning the image
             return image, results
             
-    #cap.release()
 
+# draws the circles that are alive on screen
 def redraw_circles(image, game):
     for circ in game.active_circles:
         if circ.lifetime > 0:
             image = cv2.circle(image, (circ.x, circ.y), radius, colour, thickness)    
         
-    #cv2.imshow('View', cv2.flip(image, 1))
 
     image = cv2.flip(image,1)
     cv2.putText(image, "Score: " + str(game.score), (5,40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 3)
@@ -70,8 +61,5 @@ def redraw_circles(image, game):
     return image
 
 def write_game_over(image, game):
-     #cv2.putText(image, "Score: " + str(game.score), (15,40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 3)
-     #image = cv2.flip(image,1)
-     #cv2.putText(image, "Lives: " + str(game.lives - game.missed_circles), (20,80), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 3)
      cv2.putText(image, "GAME OVER",(40,640), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 8)
      return image

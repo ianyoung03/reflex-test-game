@@ -1,14 +1,15 @@
+# this file is the class that represents the game itself
 import circle
 import mediapipe as mp
 mp_hands = mp.solutions.hands
-BUFFER = 100
-OB = -5
+BUFFER = 100 # the value that the center point of hand must be within
+OB = -5 # out of bounds value (if the hand is out of bounds feed dead coordinates)
 class GameStage:
     score = 0 # num of "grabbed" circles
     missed_circles = 0 # how many missed circles there are 
     active_circles = [] # List of all active circles
-    window_x = 0
-    window_y = 0
+    #window_x = 0
+    #window_y = 0
     lives = 3
 
     def __init__(self, difficulty, window_x, window_y):
@@ -16,11 +17,10 @@ class GameStage:
         self.windox_x = window_x
         self.window_y = window_y
     
-    # really should be called update circles
+    # updates the data of all the circles currently in the game
     def check_circles(self, results, image_width , image_height):
         if results.multi_hand_landmarks != None:
-            #getting pos of hand in x and y coords
-            
+            #getting pos of both hands in x and y coords
             x1 = results.multi_hand_landmarks[0].landmark[mp_hands.HandLandmark.MIDDLE_FINGER_MCP].x
             y1 = results.multi_hand_landmarks[0].landmark[mp_hands.HandLandmark.MIDDLE_FINGER_MCP].y
             x1_scaled = x1*image_width
@@ -45,12 +45,9 @@ class GameStage:
             y2_scaled = OB
 
         for circ in self.active_circles:
-            #decrease lifetime of each circle by 1
-            #circ.decrement_lifetime()
             circ.lifetime = circ.lifetime - 1
             #lifetime condition (if circle isn't caught do stuff)
             if circ.lifetime == 0:
-                #print("got to here")
                 self.increase_missed_circ()
                 self.active_circles.remove(circ)
 
@@ -65,10 +62,12 @@ class GameStage:
     def increase_missed_circ(self):
         self.missed_circles += 1
     
+    # func that checks if game is over
     def check_game_over(self):
         if self.missed_circles == self.lives:
             return True
     
+    # func that adds another circle to the model
     def add_circle(self):
         self.active_circles.append(circle.Circle(0,30))
 
