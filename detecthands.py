@@ -1,6 +1,5 @@
 
 # this class behaves as the controller and viewport in MVC. 
-import keypresses
 import cv2
 import mediapipe as mp
 import circle

@@ -1,7 +1,7 @@
 import circle
 import mediapipe as mp
 mp_hands = mp.solutions.hands
-BUFFER = 70
+BUFFER = 100
 OB = -5
 class GameStage:
     score = 0 # num of "grabbed" circles

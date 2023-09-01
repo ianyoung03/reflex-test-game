@@ -3,10 +3,7 @@ import cv2
 import detecthands as dh2
 import gamestage
 import mediapipe as mp
-#import time
 application = Flask(__name__)
-#app = application
-
 
 
 @application.route('/')
@@ -31,8 +28,8 @@ def home():
 def main():
     mp_hands = mp.solutions.hands
     # initialize a game instance
-    # big loop. put the with hands stuff here?
-        #run the mp model on a frame and be returned a cv2 image: image = runModel()
+
+        #run the mp model on a frame and be returned a cv2 image: 
         #image = run_detection_model()
         #update_game(cv2image we receive)
         #uddate_view(image)
@@ -43,6 +40,7 @@ def main():
     game = gamestage.GameStage(1, 1920, 1080)
     cap = cv2.VideoCapture(0)
     counter = 0
+    max = 60
     
     while True:
         
@@ -56,10 +54,18 @@ def main():
         #print(image_height)
         
         # essentially updating the game with all the new circles here
-        if counter == 0:
+        if counter == 0 and max <= 40:
             game.add_circle()
-        elif counter == 60:
+            game.add_circle()
+            game.add_circle()
+        elif counter == 0 and max <= 50:
+            game.add_circle()
+            game.add_circle()
+        elif counter == 0:
+            game.add_circle()
+        elif counter == max:
             counter = -1
+            max = max-3
         counter += 1
         #cv2.flip(image, 1)
         
@@ -87,8 +93,10 @@ def main():
             image = buffer.tobytes()
             yield(b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + image + b'\r\n')
             #over = True
+            
             cv2.destroyAllWindows()
-            break
+            #time.sleep(10)
+            #break
         else:
             ret, buffer = cv2.imencode('.jpg', image)
             image = buffer.tobytes()
