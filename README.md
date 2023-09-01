@@ -14,3 +14,9 @@ circle.py -> A small class to represent the circles that appear on the screen. W
 
 detecthands.py -> This is where the core of the hand detection happens.
 
+templates, static -> holds the front end files
+
+hand_landmarker.task -> data required to run the hand detection model from MediaPipe
+
+requirements.txt -> all required libraries in the venv
+
